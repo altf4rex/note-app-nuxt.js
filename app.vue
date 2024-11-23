@@ -1,26 +1,30 @@
 <template>
-  <div class="container">
-    <h1>Welcome to My Customized Nuxt Project!</h1>
-    <p>This is a custom version of the default NuxtWelcome component.</p>
-  </div>
+    <NuxtLayout>
+      <NuxtPage />
+    </NuxtLayout>
 </template>
+
 
 
 <style>
 /* Глобальные стили */
+@font-face {
+  font-family: 'IndieFlower';
+  src: url('public/fonts/IndieFlower-Regular.ttf') format('truetype');
+}
+
 body {
+  font-family: 'IndieFlower', sans-serif;
   margin: 0;
   padding: 0;
-  background-color: black;
-  color: white;
+  width: 100vw;
+  height: 100vh; 
+  background-color: #1d1d1d;
+  color: #B2B2B1; 
 }
-</style>
 
-<style scoped>
-.container {
+#__nuxt{
   width: 100%;
-  height: 100vh; /* Занимает всю высоту экрана */
-  background-color: black;
-  color: white; /* Белый цвет текста для контраста */
+  height: 100%; 
 }
 </style>
