@@ -1,7 +1,6 @@
-import {Page} from "../backend/models/Page"
+import { Page } from "../backend/models/Page";
 
-// services/pageService.ts
-export async function fetchAllPages() {
+export async function fetchAllPages(): Promise<Pick<Page, "id" | "title">[]> {
     const response = await fetch('/api/pages');
     if (!response.ok) {
         throw new Error(`Failed to fetch pages: ${response.statusText}`);
@@ -9,6 +8,13 @@ export async function fetchAllPages() {
     return await response.json();
 }
 
+export async function fetchPageById(id: string): Promise<Page> {
+    const response = await fetch(`/api/pages/${id}`);
+    if (!response.ok) {
+        throw new Error(`Failed to fetch page: ${response.statusText}`);
+    }
+    return await response.json();
+}
 
 export async function createPage(): Promise<Page> {
     const response = await fetch('/api/pages', {
@@ -16,10 +22,29 @@ export async function createPage(): Promise<Page> {
         body: JSON.stringify({ title: "Название страницы", content: "текст" }),
         headers: { 'Content-Type': 'application/json' },
     });
-
     if (!response.ok) {
         throw new Error(`Failed to create page: ${response.statusText}`);
     }
-
     return await response.json();
+}
+
+export async function updatePage(id: string, data: Partial<Page>): Promise<Page> {
+    const response = await fetch(`/api/pages/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify(data),
+        headers: { 'Content-Type': 'application/json' },
+    });
+    if (!response.ok) {
+        throw new Error(`Failed to update page: ${response.statusText}`);
+    }
+    return await response.json();
+}
+
+export async function deletePage(id: string): Promise<void> {
+    const response = await fetch(`/api/pages/${id}`, {
+        method: 'DELETE',
+    });
+    if (!response.ok) {
+        throw new Error(`Failed to delete page: ${response.statusText}`);
+    }
 }

@@ -37,7 +37,7 @@ export class PageController {
     static delete(id: string): boolean {
         const index = this.pages.findIndex(p => p.id === id);
         if (index === -1) return false;
-        this.pages.splice(index, 1); // Удаляем страницу из массива
+        this.pages.splice(index, 1); 
         return true;
     }
 }
