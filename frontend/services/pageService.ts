@@ -1,4 +1,4 @@
-import { Page } from "../backend/models/Page";
+import { Page } from "../backend-frontend/models/Page";
 
 export async function fetchAllPages(): Promise<Pick<Page, "id" | "title">[]> {
     const response = await fetch('/api/pages');

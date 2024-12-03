@@ -1,4 +1,4 @@
-import { PageController } from "../../../backend/logic/pageController";
+import { PageController } from "../../../backend-frontend/logic/pageController";
 
 export default defineEventHandler(async (event) => {
     const method = event.node.req.method;

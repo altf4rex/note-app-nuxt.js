@@ -1,24 +1,26 @@
-# Nuxt dev/build outputs
-.output
-.data
-.nuxt
-.nitro
-.cache
-dist
-
-# Node dependencies
-node_modules
-
-# Logs
-logs
-*.log
-
-# Misc
-.DS_Store
-.fleet
-.idea
-
-# Local env files
+# Общие для всего проекта
+node_modules/
+dist/
 .env
 .env.*
 !.env.example
+logs/
+*.log
+.DS_Store
+
+# Nuxt.js специфические файлы
+.nuxt/
+.nitro/
+.output/
+.data/
+.cache/
+
+# WebStorm/IntelliJ IDEA
+.idea/
+.fleet/
+
+# Исключаем только из определённых папок
+/backend/.env
+/backend/dist
+/frontend/.env
+/frontend/dist
