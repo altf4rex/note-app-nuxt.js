@@ -1,6 +1,6 @@
-import mongoose from 'mongoose';
-import Movie from './src/models/Movie'; // Подключаем модель фильма
-import dotenv from 'dotenv';
+import mongoose from "mongoose";
+import Page from "./src/models/Page"; // Подключаем модель страниц
+import dotenv from "dotenv";
 
 dotenv.config(); // Загружаем переменные окружения из .env
 
@@ -8,35 +8,34 @@ dotenv.config(); // Загружаем переменные окружения �
 const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI!);
-    console.log('MongoDB connected successfully!');
+    console.log("MongoDB connected successfully!");
   } catch (error) {
-    console.error('Error connecting to MongoDB:', error);
+    console.error("Error connecting to MongoDB:", error);
     process.exit(1);
   }
 };
 
-// Добавить новый фильм
-const addMovie = async () => {
-  const newMovie = new Movie({
-    title: 'Dune',
-    year: 2021,
-    director: 'Denis Villeneuve',
+// Добавить новую страницу
+const addPage = async () => {
+  const newPage = new Page({
+    title: "Welcome Page",
+    content: "This is the content of the welcome page.",
   });
-  await newMovie.save(); // Сохраняем фильм
-  console.log('Movie added!');
+  await newPage.save(); // Сохраняем страницу
+  console.log("Page added!");
 };
 
-// Получить список фильмов
-const getMovies = async () => {
-  const movies = await Movie.find(); // Получаем все фильмы
-  console.log('Movies:', movies);    // Выводим их в консоль
+// Получить список страниц
+const getPages = async () => {
+  const pages = await Page.find(); // Получаем все страницы
+  console.log("Pages:", pages);    // Выводим их в консоль
 };
 
 // Основная функция
 const run = async () => {
   await connectDB(); // Подключение к базе
-  await addMovie();  // Добавляем фильм
-  await getMovies(); // Получаем фильмы
+  await addPage();   // Добавляем страницу
+  await getPages();  // Получаем страницы
   mongoose.disconnect(); // Закрываем соединение с базой
 };
 

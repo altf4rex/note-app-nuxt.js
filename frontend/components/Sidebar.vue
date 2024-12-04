@@ -1,45 +1,60 @@
-<script setup>
-import { ref, onMounted } from 'vue';
-import { fetchAllPages, createPage } from '../services/pageService';
-import { useRouter } from 'vue-router';
+<script setup lang="ts">
+    import { ref, onMounted } from "vue"
+    import { useRouter } from "vue-router";
 
-const allPagesResponse = ref([]);
-const router = useRouter();
-
-onMounted(async () => {
-    await loadPages();
-});
-
-async function loadPages() {
-    try {
-        allPagesResponse.value = await fetchAllPages(); // Перезагружаем список страниц
-    } catch (error) {
-        console.error('Error fetching pages:', error);
+    interface ListType {
+        id: string;
+        title: string;
+        content: number;
     }
-}
 
-const handleCreatePage = async () => {
-    try {
-        const newPage = await createPage();
-        await loadPages(); // Обновляем список страниц
-        router.push(`/${newPage.id}`); // Переходим на страницу редактирования
-    } catch (error) {
-        console.error('Error creating page:', error);
+    const list = ref<ListType[]>([])
+    const router = useRouter();
+
+    async function fetchListPages(): Promise<void>{
+        try{
+            list.value = await $fetch(`${import.meta.env.VITE_API_URL}/api/pages`)
+        } catch (error){
+            console.error('Error fetching pages:', error);
+        }
     }
-};
+
+    async function addPage(): Promise<void>{
+        try{
+           const newPage = await $fetch<ListType>(`${import.meta.env.VITE_API_URL}/api/pages`, {
+            method: "POST",
+            body: JSON.stringify({
+                title: "New Page",
+                content: "This is a new page",
+            }), 
+            headers: {
+                "Content-Type": "application/json",
+            },
+           })
+           list.value.push(newPage);
+           router.push(`/${newPage.id}`);
+        } catch (error){
+            console.error("Error creating page:", error);
+        }
+    }
+
+    onMounted(() => {
+        fetchListPages();
+    });
 </script>
 
 
 <template>
-    <div class="sideBar-container">
-        <button @click="handleCreatePage">Add Page</button>
-        <ul class="list">
-            <li class="list-item" v-for="item in allPagesResponse" :key="item.id">
-                <router-link :to="`/${item.id}`">{{ item.title }}</router-link>
-            </li>
-        </ul>
+    <div class="sideBar-container" v-if="list.length > 0">
+      <ul class="list">
+        <li class="list-item" v-for="page in list" :key="page.id">
+          <router-link :to="`/${page.id}`">{{ page.title }}</router-link>
+        </li>
+      </ul>
+      <button @click="addPage">Add Page</button>
     </div>
-</template>
+    <div v-else>Loading...</div>
+  </template>
 
 <style scoped>
 .sideBar-container {
