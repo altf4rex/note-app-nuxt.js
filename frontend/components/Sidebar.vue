@@ -1,88 +1,80 @@
 <script setup lang="ts">
-    import { ref, onMounted } from "vue"
-    import { useRouter } from "vue-router";
+import { onMounted } from "vue";
+import { useRouter } from "vue-router";
+import { usePagesStore } from '@/store/pagesStore';
 
-    interface ListType {
-        id: string;
-        title: string;
-        content: number;
-    }
+const router = useRouter();
+const pagesStore = usePagesStore();
 
-    const list = ref<ListType[]>([])
-    const router = useRouter();
+onMounted(() => {
+    pagesStore.fetchPages();
+});
 
-    async function fetchListPages(): Promise<void>{
-        try{
-            list.value = await $fetch(`${import.meta.env.VITE_API_URL}/api/pages`)
-        } catch (error){
-            console.error('Error fetching pages:', error);
-        }
-    }
+const addPage = () => {
+  pagesStore.addPage('New Page', 'Content');
+  router.push(pagesStore.list[pagesStore.list.length - 1]._id);
+};
 
-    async function addPage(): Promise<void>{
-        try{
-           const newPage = await $fetch<ListType>(`${import.meta.env.VITE_API_URL}/api/pages`, {
-            method: "POST",
-            body: JSON.stringify({
-                title: "New Page",
-                content: "This is a new page",
-            }), 
-            headers: {
-                "Content-Type": "application/json",
-            },
-           })
-           list.value.push(newPage);
-           router.push(`/${newPage.id}`);
-        } catch (error){
-            console.error("Error creating page:", error);
-        }
-    }
-
-    onMounted(() => {
-        fetchListPages();
-    });
+const deletePage = (id: string) => {
+  pagesStore.deletePage(id);
+};
 </script>
 
-
 <template>
-    <div class="sideBar-container" v-if="list.length > 0">
-      <ul class="list">
-        <li class="list-item" v-for="page in list" :key="page.id">
-          <router-link :to="`/${page.id}`">{{ page.title }}</router-link>
-        </li>
-      </ul>
-      <button @click="addPage">Add Page</button>
-    </div>
-    <div v-else>Loading...</div>
-  </template>
+  <div class="sideBar-container" v-if="pagesStore.list.length > 0">
+    <ul class="list">
+      <li class="list-item" v-for="(page, index) in pagesStore.list" :key="page._id">
+        <router-link :to="`/${page._id}`">{{ page.title }}</router-link>
+        <button v-if="index !== 0" @click="deletePage(page._id)">
+          delete
+        </button>
+      </li>
+    </ul>
+    <button @click="addPage">Add Page</button>
+  </div>
+  <div v-else>Loading...</div>
+</template>
 
 <style scoped>
 .sideBar-container {
-    min-width: 30%;
-    height: 100%;
-    background: #262323;
+  min-width: 30%;
+  height: 100%;
+  background: #262323;
 }
 
 .list {
-    list-style: none; /* Убираем маркеры списка */
-    padding: 0; /* Убираем отступы */
-    margin: 0;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 .list-item {
-    margin: 10px 0;
-    font-family: Arial, sans-serif;
-    font-size: 18px;
+  margin: 10px 0;
+  font-family: Arial, sans-serif;
+  font-size: 18px;
+  display: flex;
+  justify-content: space-between;
+  align-content: center;
 }
 
 .list-item a {
-    text-decoration: none;
-    color: #B2B2B1;
-    transition: color 0.3s ease;
+  text-decoration: none;
+  color: #b2b2b1;
+  transition: color 0.3s ease;
 }
 
 .list-item a:hover {
-    color: #FFFFFF;
+  color: #ffffff;
 }
 
+.list-item button {
+  color: blanchedalmond;
+  background-color: inherit;
+  border: 1px solid blanchedalmond;
+  border-radius: 12px;
+}
+
+.list-item button:hover {
+  background-color: gray;
+}
 </style>
