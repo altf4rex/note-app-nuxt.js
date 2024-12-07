@@ -6,33 +6,51 @@ import { usePagesStore } from '@/store/pagesStore';
 const router = useRouter();
 const pagesStore = usePagesStore();
 
-onMounted(() => {
-    pagesStore.fetchPages();
+// Загрузка страниц при монтировании
+onMounted(async () => {
+  try {
+    await pagesStore.fetchPages();
+  } catch (error: any) {
+    console.error("Failed to fetch pages:", error.message);
+  }
 });
 
-const addPage = () => {
-  pagesStore.addPage('New Page', 'Content');
-  router.push(pagesStore.list[pagesStore.list.length - 1]._id);
+// Добавление новой страницы
+const addPage = async () => {
+  try {
+    const newPageId = await pagesStore.addPage("New Page", "Text");
+    router.push(`/${pagesStore.currentPage._id}`);
+  } catch (error: any) {
+    console.error("Failed to add page:", error.message);
+  }
 };
 
-const deletePage = (id: string) => {
-  pagesStore.deletePage(id);
+// Удаление страницы
+const deletePage = async (id: string) => {
+  try {
+    await pagesStore.deletePage(id);
+  } catch (error: any) {
+    console.error("Failed to delete page:", error.message);
+  }
 };
 </script>
 
 <template>
   <div class="sideBar-container" v-if="pagesStore.list.length > 0">
+    <p>
+      <router-link :to="`/`">Welcome Page</router-link>
+    </p>
     <ul class="list">
       <li class="list-item" v-for="(page, index) in pagesStore.list" :key="page._id">
         <router-link :to="`/${page._id}`">{{ page.title }}</router-link>
-        <button v-if="index !== 0" @click="deletePage(page._id)">
+        <button @click="deletePage(page._id)">
           delete
         </button>
       </li>
     </ul>
     <button @click="addPage">Add Page</button>
   </div>
-  <div v-else>Loading...</div>
+  <div v-else>Hmmm... Pages...</div>
 </template>
 
 <style scoped>

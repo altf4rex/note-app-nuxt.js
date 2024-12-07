@@ -1,44 +1,33 @@
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from "vue";
+import { usePagesStore } from "@/store/pagesStore";
 import { useRoute } from "vue-router";
 
 const route = useRoute();
-const pageId = route.params.pageId;
-const page = ref({ title: "", content: "" });
+const pageId = route.params.pageId as string;
+
+const pagesStore = usePagesStore();
 const isLoading = ref(true);
 const errorMessage = ref("");
 
-async function loadPage() {
-  isLoading.value = true;
+onMounted(async () => {
   try {
-    if (!pageId) throw new Error("Page ID is missing");
-    const newPage = await $fetch(
-      `${import.meta.env.VITE_API_URL}/api/pages/${pageId}`
-    );
-    page.value = newPage;
-  } catch (error) {
-    errorMessage.value = "Failed to load the page.";
-    console.error("Error fetching page:", error);
-  } finally {
+    await pagesStore.fetchPageById(pageId);
+    isLoading.value = false;
+  } catch (error: any) {
+    errorMessage.value = error.message;
     isLoading.value = false;
   }
-}
+});
 
 const savePage = async () => {
   try {
-    await $fetch(`${import.meta.env.VITE_API_URL}/api/pages/${pageId}`, {
-      method: "PUT",
-      body: page.value,
-      headers: { "Content-Type": "application/json" },
-    });
+    await pagesStore.savePage(pageId, pagesStore.currentPage);
+    alert("Page saved successfully!");
   } catch (error) {
-    console.error("Error saving page:", error);
+    alert("Failed to save the page.");
   }
 };
-
-onMounted(() => {
-  loadPage();
-});
 </script>
 
 <template>
@@ -46,9 +35,9 @@ onMounted(() => {
     <div v-if="isLoading">Loading...</div>
     <div v-else-if="errorMessage">{{ errorMessage }}</div>
     <div v-else>
-      <input v-model="page.title" placeholder="Title" class="title" />
+      <input v-model="pagesStore.currentPage.title" placeholder="Title" class="title" />
       <textarea
-        v-model="page.content"
+        v-model="pagesStore.currentPage.content"
         placeholder="Content"
         class="content"
       ></textarea>
