@@ -1,12 +1,7 @@
 import { defineStore } from "pinia";
-import {
-  fetchPages,
-  fetchPageById,
-  addPage,
-  savePage,
-  deletePage,
-} from "@/utils/apiService";
-import type { ListType } from "../types/index";
+import { fetchPages, fetchPageById, addPage, savePage, deletePage } from "../utils/apiService";
+import { useAuthStore } from "./authStore";
+import type { ListType } from "@/types/index";
 
 export const usePagesStore = defineStore("pages", {
   state: () => ({
@@ -17,10 +12,9 @@ export const usePagesStore = defineStore("pages", {
   }),
 
   actions: {
-
     handleError(error: any) {
-      this.error = error.message || "Произошла ошибка";
-      console.error("Ошибка в store:", error);
+      this.error = error.message || "An error occurred";
+      console.error("Error in store:", error);
     },
 
     updateListItem(id: string, updatedData: Partial<ListType>) {
@@ -33,21 +27,33 @@ export const usePagesStore = defineStore("pages", {
     async fetchPages() {
       this.isLoading = true;
       try {
-        const pages = await fetchPages();
-        this.list = pages;
+        this.list = await fetchPages();
         this.error = null;
       } catch (error) {
         this.handleError(error);
       } finally {
         this.isLoading = false;
+        console.log(this.list);
       }
     },
 
     async fetchPageById(id: string) {
+      const cachedPage = this.list.find((page) => page._id === id);
+      if (cachedPage) {
+        this.currentPage = cachedPage;
+        return;
+      }
+
       this.isLoading = true;
       try {
-        const page = await fetchPageById(id);
-        this.currentPage = page;
+        const fetchedPage = await fetchPageById(id);
+        this.currentPage = fetchedPage || {
+          _id: "",
+          title: "",
+          content: "",
+          createdAt: new Date(),
+          updatedAt: null,
+        };
         this.error = null;
       } catch (error) {
         this.handleError(error);
@@ -60,8 +66,8 @@ export const usePagesStore = defineStore("pages", {
       this.isLoading = true;
       try {
         const newPage = await addPage({ title, content });
-        this.currentPage = newPage;
         this.list.push(newPage);
+        this.currentPage = newPage;
         this.error = null;
       } catch (error) {
         this.handleError(error);
@@ -74,11 +80,10 @@ export const usePagesStore = defineStore("pages", {
       this.isLoading = true;
       try {
         await savePage(id, pageData);
-        this.updateListItem(id, pageData);
+        this.updateListItem(id, pageData); // Обновляем список
         this.error = null;
       } catch (error) {
         this.handleError(error);
-        throw error; 
       } finally {
         this.isLoading = false;
       }
@@ -88,7 +93,7 @@ export const usePagesStore = defineStore("pages", {
       this.isLoading = true;
       try {
         await deletePage(id);
-        this.list = this.list.filter((page) => page._id !== id); 
+        this.list = this.list.filter((page) => page._id !== id);
         this.error = null;
       } catch (error) {
         this.handleError(error);
@@ -96,5 +101,22 @@ export const usePagesStore = defineStore("pages", {
         this.isLoading = false;
       }
     },
+
+    clearPages() {
+      this.list = [];
+      this.currentPage = {} as ListType;
+    },
   },
 });
+
+
+export function setupPagesStoreSubscriptions() {
+  const pagesStore = usePagesStore();
+  const authStore = useAuthStore();
+
+  authStore.$subscribe((mutation, state) => {
+    if (!state.currentUser) {
+      pagesStore.clearPages(); // Очистить страницы, если пользователь вышел
+    }
+  });
+}

@@ -1,64 +1,103 @@
-import type { ListType } from "../types/index";
+// services/apiService.ts
+import { useFetch } from "nuxt/app";
+import type { ListType } from "@/types/index";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-// Fetch страницы
-export async function fetchPages(): Promise<ListType[]> {
+export async function fetchCurrentUser() {
   try {
-    return await $fetch(`${API_URL}/api/pages`);
+    const data = await $fetch<{ user: any }>(`${API_URL}/api/auth/current-user`, {
+      method: "GET",
+      credentials: "include", // Для отправки cookies
+    });
+    return data.user || null;
   } catch (error) {
-    console.error("Error fetching pages:", error);
-    throw new Error("Failed to fetch pages. Please try again later.");
+    return null; // Если пользователь не авторизован
   }
 }
 
-// Получение страницы по ID
-export async function fetchPageById(id: string): Promise<ListType> {
+export async function logoutUser() {
+  await $fetch(`${API_URL}/api/auth/logout`, {
+    method: 'POST',
+    credentials: 'include', // Для удаления cookie с токеном
+  });
+}
+
+
+// Получение списка страниц (GET)
+export async function fetchPages() {
   try {
-    return await $fetch(`${API_URL}/api/pages/${id}`);
-  } catch (error) {
-    console.error("Error fetching page by ID:", error);
-    throw new Error("Failed to fetch the page. Please try again later.");
+    const data = await $fetch<ListType[]>(`${API_URL}/api/pages`, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+    });
+    return data || [];
+  } catch (error: any) {
+    throw new Error(error.message || "Error fetching pages");
   }
 }
 
-// Добавление страницы
-export async function addPage(newPage: { title: string; content: string }): Promise<ListType> {
+// Получение страницы по ID (GET)
+export async function fetchPageById(id: string) {
   try {
-    return await $fetch(`${API_URL}/api/pages`, {
+    const data = await $fetch<ListType>(`${API_URL}/api/pages/${id}`, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+    });
+    return data || null;
+  } catch (error: any) {
+    throw new Error(error.message || "Error fetching page by ID");
+  }
+}
+
+// Добавление страницы (POST)
+export async function addPage(newPage: { title: string; content: string }) {
+  try {
+    return await $fetch<ListType>(`${API_URL}/api/pages`, {
       method: "POST",
-      body: JSON.stringify(newPage),
+      body: newPage,
       headers: { "Content-Type": "application/json" },
+      credentials: "include",
     });
-  } catch (error) {
-    console.error("Error adding page:", error);
-    throw new Error("Failed to add the page. Please try again later.");
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw new Error(error.message || "Error adding page");
+    }
+    throw new Error("Unknown error occurred while adding page");
   }
 }
 
-// Удаление страницы
-export async function deletePage(id: string): Promise<void> {
+// Сохранение страницы (PUT)
+export async function savePage(id: string, pageData: ListType) {
   try {
-    await $fetch(`${API_URL}/api/pages/${id}`, {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-    });
-  } catch (error) {
-    console.error("Error deleting page:", error);
-    throw new Error("Failed to delete the page. Please try again later.");
-  }
-}
-
-// Сохранение страницы
-export async function savePage(id: string, pageData: ListType): Promise<void> {
-  try {
-    await $fetch(`${API_URL}/api/pages/${id}`, {
+    await $fetch<void>(`${API_URL}/api/pages/${id}`, {
       method: "PUT",
       body: pageData,
       headers: { "Content-Type": "application/json" },
+      credentials: "include",
     });
-  } catch (error) {
-    console.error("Error saving page:", error);
-    throw new Error("Failed to save the page. Please try again later.");
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw new Error(error.message || "Error saving page");
+    }
+    throw new Error("Unknown error occurred while saving page");
+  }
+}
+
+// Удаление страницы (DELETE)
+export async function deletePage(id: string) {
+  try {
+    await $fetch<void>(`${API_URL}/api/pages/${id}`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+    });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw new Error(error.message || "Error deleting page");
+    }
+    throw new Error("Unknown error occurred while deleting page");
   }
 }

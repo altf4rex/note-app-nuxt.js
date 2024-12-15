@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { usePagesStore } from "@/store/pagesStore";
+import { useAuthStore } from "@/store/authStore"; // Добавляем store для авторизации
 import { useRoute } from "vue-router";
 
 const route = useRoute();
 const pageId = route.params.pageId as string;
 
 const pagesStore = usePagesStore();
+const authStore = useAuthStore(); // Для проверки авторизации
+
 const isLoading = ref(true);
 const errorMessage = ref("");
 
@@ -21,6 +24,12 @@ onMounted(async () => {
 });
 
 const savePage = async () => {
+  // Проверяем авторизацию перед сохранением
+  // if (!authStore?.currentUser?.username) {
+  //   alert("You must be logged in to save the page.");
+  //   return;
+  // }
+
   try {
     await pagesStore.savePage(pageId, pagesStore.currentPage);
     alert("Page saved successfully!");
@@ -36,15 +45,12 @@ const savePage = async () => {
     <div v-else-if="errorMessage">{{ errorMessage }}</div>
     <div v-else>
       <input v-model="pagesStore.currentPage.title" placeholder="Title" class="title" />
-      <textarea
-        v-model="pagesStore.currentPage.content"
-        placeholder="Content"
-        class="content"
-      ></textarea>
+      <textarea v-model="pagesStore.currentPage.content" placeholder="Content" class="content"></textarea>
       <button @click="savePage">Save</button>
     </div>
   </div>
 </template>
+
 
 <style scoped>
 .container {

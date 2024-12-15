@@ -1,21 +1,11 @@
 <script setup lang="ts">
-import { onMounted } from "vue";
-import { useRouter } from "vue-router";
 import { usePagesStore } from '@/store/pagesStore';
+import { useRouter } from "vue-router";
+import Authorization from './Authorization.vue';
 
 const router = useRouter();
 const pagesStore = usePagesStore();
 
-// Загрузка страниц при монтировании
-onMounted(async () => {
-  try {
-    await pagesStore.fetchPages();
-  } catch (error: any) {
-    console.error("Failed to fetch pages:", error.message);
-  }
-});
-
-// Добавление новой страницы
 const addPage = async () => {
   try {
     const newPageId = await pagesStore.addPage("New Page", "Text");
@@ -25,7 +15,6 @@ const addPage = async () => {
   }
 };
 
-// Удаление страницы
 const deletePage = async (id: string) => {
   try {
     await pagesStore.deletePage(id);
@@ -36,11 +25,12 @@ const deletePage = async (id: string) => {
 </script>
 
 <template>
-  <div class="sideBar-container" v-if="pagesStore.list.length > 0">
-    <p>
+  <Authorization />
+  <div class="sideBar-container">
+    <h3 class="main-page__link">
       <router-link :to="`/`">Welcome Page</router-link>
-    </p>
-    <ul class="list">
+    </h3>
+    <ul class="list" v-if="pagesStore.list.length > 0">
       <li class="list-item" v-for="(page, index) in pagesStore.list" :key="page._id">
         <router-link :to="`/${page._id}`">{{ page.title }}</router-link>
         <button @click="deletePage(page._id)">
@@ -48,16 +38,28 @@ const deletePage = async (id: string) => {
         </button>
       </li>
     </ul>
+    <div v-else>Hmmm... Pages...</div>
     <button @click="addPage">Add Page</button>
   </div>
-  <div v-else>Hmmm... Pages...</div>
+  
 </template>
+
 
 <style scoped>
 .sideBar-container {
-  min-width: 30%;
+  min-width: 15%;
   height: 100%;
   background: #262323;
+}
+
+.main-page__link a{
+  text-decoration: none;
+  color: #b2b2b1;
+}
+
+.main-page__link a{
+  text-decoration: none;
+  color: #b2b2b1;
 }
 
 .list {
@@ -68,7 +70,6 @@ const deletePage = async (id: string) => {
 
 .list-item {
   margin: 10px 0;
-  font-family: Arial, sans-serif;
   font-size: 18px;
   display: flex;
   justify-content: space-between;
@@ -86,13 +87,18 @@ const deletePage = async (id: string) => {
 }
 
 .list-item button {
+  border: none;
+  outline: none;
+  background: none;
+  box-shadow: none;
+  font-size: 12px;
   color: blanchedalmond;
   background-color: inherit;
-  border: 1px solid blanchedalmond;
   border-radius: 12px;
 }
 
 .list-item button:hover {
   background-color: gray;
+  border: 0.5px solid blanchedalmond;
 }
 </style>

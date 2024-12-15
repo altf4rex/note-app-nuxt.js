@@ -8,3 +8,11 @@
 3. **UI/UX**  
 
 4. **рендеринг, кэш загруженныъ страниц**  
+
+5. **защиённый рутинг на фронте**  
+<!-- 
+function ProtectedRoute({ children }) {
+  const isAuthenticated = checkAuth(); // Проверить статус авторизации
+
+  return isAuthenticated ? children : <Navigate to="/login" />;
+} -->

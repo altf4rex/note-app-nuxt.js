@@ -1,28 +1,22 @@
 <script setup lang="ts">
-import { onMounted } from "vue";
 import { usePagesStore } from "@/store/pagesStore";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
+const pagesStore = usePagesStore();
 
 function navigateToPage(id: string) {
   router.push(`/${id}`);
 }
 
-function addNewPage() {
-  router.push("/new");
-}
-
-const pagesStore = usePagesStore();
-
-onMounted(async () => {
+const addPage = async () => {
   try {
-    await pagesStore.fetchPages();
+    const newPageId = await pagesStore.addPage("New Page", "Text");
+    router.push(`/${pagesStore.currentPage._id}`);
   } catch (error: any) {
-    console.error("Failed to fetch pages:", error.message);
+    console.error("Failed to add page:", error.message);
   }
-});
-
+};
 </script>
 
 <template>
@@ -40,10 +34,11 @@ onMounted(async () => {
     </template>
     <div class="empty-message" v-else>
       <p>No pages found. Why not create one?</p>
-      <button @click="addNewPage">Add Page</button>
+      <button @click="addPage">Add Page</button>
     </div>
   </div>
 </template>
+
 
 <style scoped>
 .container {
