@@ -7,6 +7,7 @@ export async function fetchCurrentUser() {
   try {
     const data = await $fetch<{ user: any }>(`${API_URL}/api/auth/current-user`, {
       method: "GET",
+      mode: 'no-cors',
       credentials: "include", // Для отправки cookies
     });
     return data.user || null;
@@ -34,6 +35,7 @@ export async function fetchPages() {
   try {
     const data = await $fetch<ListType[]>(`${API_URL}/api/pages`, {
       method: "GET",
+      mode: 'no-cors',
       headers: { "Content-Type": "application/json" },
       credentials: "include",
     });
