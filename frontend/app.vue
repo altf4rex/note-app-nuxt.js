@@ -23,8 +23,8 @@ body {
   color: #B2B2B1; 
 }
 
-#__nuxt{
+/* #__nuxt{
   width: 100%;
   height: 100%; 
-}
+} */
 </style>

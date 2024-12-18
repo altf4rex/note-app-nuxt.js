@@ -10,6 +10,9 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@tiptap/extension-color": "^2.10.3",
+    "@tiptap/extension-list-item": "^2.10.3",
+    "@tiptap/extension-text-style": "^2.10.3",
     "@tiptap/pm": "^2.10.3",
     "@tiptap/starter-kit": "^2.10.3",
     "@tiptap/vue-3": "^2.10.3",

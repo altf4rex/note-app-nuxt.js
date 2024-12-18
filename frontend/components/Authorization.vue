@@ -1,121 +1,78 @@
 <script setup>
 import { ref } from 'vue';
 import { useAuthStore } from '@/store/authStore';
-
-const API_URL = import.meta.env.VITE_API_URL;
+import { loginUser, registerUser } from '@/utils/apiService';
 
 const authStore = useAuthStore();
 
-const showModal = ref(false);
-const isLogin = ref(true); // Контролирует режим: логин или регистрация
-const username = ref('');
-const password = ref('');
+const showModal = ref(false); // Показывать ли модальное окно
+const isLogin = ref(true); // Режим: true для Login, false для Register
+const username = ref(''); // Имя пользователя
+const password = ref(''); // Пароль
 
-// Открытие и закрытие модального окна
+// Открытие модального окна
 function toggleModal(mode) {
-  isLogin.value = mode === 'login';
-  showModal.value = true;
+  isLogin.value = mode === 'login'; // Установить режим
+  showModal.value = true; // Показать модальное окно
 }
 
+// Закрытие модального окна
 function closeModal() {
-  showModal.value = false;
-  username.value = '';
+  showModal.value = false; // Скрыть окно
+  username.value = ''; // Очистить поля
   password.value = '';
 }
 
-// Функция для логина
+// Логин
 async function login() {
   try {
-    const response = await $fetch(`${API_URL}/api/auth/login`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        username: username.value,
-        password: password.value,
-      }),
-      credentials: 'include', // Для отправки cookie с токеном
-    });
-
-    if (!response.message) {
-      throw new Error('Login failed: ' + response.message);
-      console.log(!response.ok)
-      console.log(response)
-    }
-
+    await loginUser(username.value, password.value);
     await authStore.loadCurrentUser();
-    console.log(authStore.currentUser)
-
     alert('Login successful!');
-    closeModal();
-
+    closeModal(); // Закрыть окно
   } catch (error) {
     alert(error.message || 'Login failed');
   }
 }
 
-// Функция для регистрации
+// Регистрация
 async function register() {
   try {
-    const response = await $fetch(`${API_URL}/api/auth/register`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        username: username.value,
-        password: password.value,
-      }),
-      credentials: 'include',
-    });
-
-    if (!response.ok) {
-      throw new Error('Registration failed: ' + response.statusText);
-    }
-
+    await registerUser(username.value, password.value);
     await authStore.loadCurrentUser();
-
-    const data = await response.json();
     alert('Registration successful!');
-    closeModal();
+    closeModal(); // Закрыть окно
   } catch (error) {
     alert(error.message || 'Registration failed');
   }
 }
 
-// onMounted(async() => {
-//   await authStore.loadCurrentUser();
-// });
-
+// Выход
 async function logout() {
- await authStore.logout();
+  await authStore.logout();
 }
-
 </script>
 
-
 <template>
-  <div>
+  <div class="">
+    <!-- Проверяем, авторизован ли пользователь -->
     <p v-if="authStore.currentUser">
-      Вы вошли как: {{ authStore.currentUser.username }}
+      {{ authStore.currentUser.username }}
       <button @click="logout">Logout</button>
     </p>
-    <p v-else>Не зарегистрировано</p>
+    <div v-else class="log-buttons">
+      <button v-if="!authStore.isAuthenticated" @click="toggleModal('login')">Login</button>
+      <button v-if="!authStore.isAuthenticated" @click="toggleModal('register')">Register</button>
+    </div>
+    
+    <!-- <p v-else>Не зарегистрировано</p>
+    <button v-if="!authStore.isAuthenticated" @click="toggleModal('login')">Login</button>
+    <button v-if="!authStore.isAuthenticated" @click="toggleModal('register')">Register</button> -->
   </div>
-  <!-- Остальная часть шаблона -->
 
-
-  <div>
-    <!-- <p v-if="authStore.currentUser">Вы вошли как: {{ authStore.currentUser.username }}</p>
-    <p v-else>Не зарегистрировано</p> -->
-
-    <button v-if="authStore.isAuthenticated" @click="authStore.logout">Logout</button>
-    <button v-else @click="toggleModal('login')">Login</button>
-    <button v-if="!authStore.isAuthenticated" @click="toggleModal('register')">Register</button>
-
-    <!-- Модальное окно остается как есть -->
-    <div v-if="showModal" class="modal">
+  <!-- Модальное окно -->
+  <div v-if="showModal" class="modal-overlay" @click.self="closeModal">
+    <div class="modal-content">
       <form @submit.prevent="isLogin ? login() : register()">
         <h2>{{ isLogin ? 'Login' : 'Register' }}</h2>
         <input v-model="username" placeholder="Username" required />
@@ -126,3 +83,56 @@ async function logout() {
     </div>
   </div>
 </template>
+
+<style scoped>
+
+.log-buttons{
+  display: flex;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+input {
+  display: block;
+  width: 100%;
+  margin: 10px 0;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+button {
+  display: block;
+  margin: 10px auto 0;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+</style>

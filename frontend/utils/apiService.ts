@@ -16,6 +16,52 @@ export async function fetchCurrentUser() {
   }
 }
 
+export async function loginUser(username: string, password: string) {
+  try {
+    const response = await fetch(`${API_URL}/api/auth/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ username, password }),
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Login failed");
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error during login:", error);
+    throw new Error("Failed to log in");
+  }
+}
+
+export async function registerUser(username: string, password: string) {
+  try {
+    const response = await fetch(`${API_URL}/api/auth/register`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ username, password }),
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Registration failed");
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error during registration:", error);
+    throw new Error("Failed to register");
+  }
+}
+
 // Выход пользователя
 export async function logoutUser() {
   try {

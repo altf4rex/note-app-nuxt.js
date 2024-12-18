@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { usePagesStore } from '@/store/pagesStore';
+import { useUiStore } from '@/store/uiStore';
 import { useRouter } from "vue-router";
-import Authorization from './Authorization.vue';
 
 const router = useRouter();
 const pagesStore = usePagesStore();
+const uiStore = useUiStore();
+
 
 const addPage = async () => {
   try {
@@ -25,31 +27,42 @@ const deletePage = async (id: string) => {
 </script>
 
 <template>
-  <Authorization />
-  <div class="sideBar-container">
-    <h3 class="main-page__link">
-      <router-link :to="`/`">Welcome Page</router-link>
-    </h3>
-    <ul class="list" v-if="pagesStore.list.length > 0">
-      <li class="list-item" v-for="(page, index) in pagesStore.list" :key="page._id">
-        <router-link :to="`/${page._id}`">{{ page.title }}</router-link>
-        <button @click="deletePage(page._id)">
-          delete
-        </button>
-      </li>
-    </ul>
-    <div v-else>Hmmm... Pages...</div>
-    <button @click="addPage">Add Page</button>
-  </div>
-  
+<transition name="slide">
+      <div v-if="uiStore.isSidebarOpen" class="sideBar-container">
+        <h3 class="main-page__link">
+          <router-link :to="`/`">Welcome Page</router-link>
+        </h3>
+        <ul class="list" v-if="pagesStore.list.length > 0">
+          <li class="list-item" v-for="(page, index) in pagesStore.list" :key="page._id">
+            <router-link :to="`/${page._id}`">{{ page.title }}</router-link>
+            <button @click="deletePage(page._id)">delete</button>
+          </li>
+        </ul>
+        <div v-else>Hmmm... Pages...</div>
+        <button @click="addPage">Add Page</button>
+      </div>
+    </transition>
 </template>
 
 
 <style scoped>
 .sideBar-container {
-  min-width: 15%;
-  height: 100%;
+  min-width: 250px;
+  max-width: 15%;
+  height: 100vh;
   background: #262323;
+  transition: transform 0.3s ease;
+  overflow: hidden;
+}
+
+.slide-enter-active,
+.slide-leave-active {
+  transition: transform 0.3s ease;
+}
+
+.slide-enter-from,
+.slide-leave-to {
+  transform: translateX(-100%);
 }
 
 .main-page__link a{

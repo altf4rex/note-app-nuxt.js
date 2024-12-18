@@ -3,6 +3,7 @@ import { onMounted } from "vue";
 import { usePagesStore } from "@/store/pagesStore";
 import { useAuthStore } from "@/store/authStore";
 import Sidebar from "~/components/Sidebar.vue";
+import Header from "~/components/Header.vue";
 
 // Инициализация хранилищ
 const pagesStore = usePagesStore();
@@ -31,7 +32,11 @@ onMounted(async () => {
 <template>
   <div class="main-container">
     <Sidebar />
-    <slot />
+    <div class="main-page">
+      <Header />
+      <slot />
+    </div>
+    
   </div>
 </template>
 
@@ -41,4 +46,9 @@ onMounted(async () => {
   width: 100%;
   height: 100%;
 }
+.main-page{
+  width: 100%;
+}
+
+
 </style>

@@ -1,14 +1,13 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { usePagesStore } from "@/store/pagesStore";
-import { useAuthStore } from "@/store/authStore"; // Добавляем store для авторизации
 import { useRoute } from "vue-router";
+import TiptapEditor from "~/components/TiptapEditor.vue";
 
 const route = useRoute();
 const pageId = route.params.pageId as string;
 
 const pagesStore = usePagesStore();
-const authStore = useAuthStore(); // Для проверки авторизации
 
 const isLoading = ref(true);
 const errorMessage = ref("");
@@ -23,13 +22,12 @@ onMounted(async () => {
   }
 });
 
-const savePage = async () => {
-  // Проверяем авторизацию перед сохранением
-  // if (!authStore?.currentUser?.username) {
-  //   alert("You must be logged in to save the page.");
-  //   return;
-  // }
+// Обработчик для обновления контента в store
+const updateContent = (newContent: string) => {
+  pagesStore.currentPage.content = newContent;
+};
 
+const savePage = async () => {
   try {
     await pagesStore.savePage(pageId, pagesStore.currentPage);
     alert("Page saved successfully!");
@@ -39,13 +37,23 @@ const savePage = async () => {
 };
 </script>
 
+
+
 <template>
-  <div class="container">
+  <div class="page-container">
     <div v-if="isLoading">Loading...</div>
     <div v-else-if="errorMessage">{{ errorMessage }}</div>
-    <div v-else>
-      <input v-model="pagesStore.currentPage.title" placeholder="Title" class="title" />
-      <textarea v-model="pagesStore.currentPage.content" placeholder="Content" class="content"></textarea>
+    <div v-else class="content">
+      <input
+        v-model="pagesStore.currentPage.title"
+        placeholder="Title"
+        class="title" />
+      <client-only>
+        <TiptapEditor
+          :content="pagesStore.currentPage.content"
+          :onUpdateContent="updateContent"
+        />
+      </client-only>
       <button @click="savePage">Save</button>
     </div>
   </div>
@@ -53,18 +61,17 @@ const savePage = async () => {
 
 
 <style scoped>
-.container {
-  min-width: 67%;
-  min-height: 100%;
-  margin: 0 auto;
+.page-container {
   display: flex;
-  flex-direction: column;
-  align-items: stretch;
+  flex-wrap: wrap;
   color: #b2b2b1;
 }
 
-.title,
 .content {
+
+}
+
+.title {
   width: 100%;
   height: 100%;
   font-size: 36px;
