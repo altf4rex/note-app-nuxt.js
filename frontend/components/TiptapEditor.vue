@@ -1,6 +1,10 @@
 <template>
   <div v-if="editor" class="editor-container">
-    <div class="toolbar">
+    <div
+      v-show="showMenu"
+      :style="menuStyle"
+      class="floating-menu"
+    >
       <button
         @click="editor.chain().focus().toggleBold().run()"
         :class="{ 'is-active': editor.isActive('bold') }"
@@ -18,15 +22,6 @@
         :class="{ 'is-active': editor.isActive('strike') }"
       >
         Strike
-      </button>
-      <button @click="editor.chain().focus().clearNodes().run()">
-        Clear Nodes
-      </button>
-      <button
-        @click="editor.chain().focus().setParagraph().run()"
-        :class="{ 'is-active': editor.isActive('paragraph') }"
-      >
-        Paragraph
       </button>
       <button
         @click="editor.chain().focus().toggleBulletList().run()"
@@ -46,10 +41,10 @@
       >
         Blockquote
       </button>
-      <button @click="editor.chain().focus().undo().run()">Undo</button>
-      <button @click="editor.chain().focus().redo().run()">Redo</button>
+      <button @click="editor.chain().focus().clearNodes().run()">
+        Clear
+      </button>
     </div>
-
     <editor-content :editor="editor" />
   </div>
 </template>
@@ -68,6 +63,13 @@ export default {
   data() {
     return {
       editor: null,
+      showMenu: false,
+      menuStyle: {
+        position: 'absolute',
+        top: '0',
+        left: '0',
+        display: 'none',
+      },
     }
   },
   mounted() {
@@ -79,8 +81,25 @@ export default {
       ],
       content: `
         <h2>Welcome to Tiptap!</h2>
-        <p>This is a simple text editor example.</p>
+        <p>Select some text to see the floating menu.</p>
       `,
+      onSelectionUpdate: ({ editor }) => {
+        const selection = window.getSelection()
+        const range = selection.rangeCount > 0 ? selection.getRangeAt(0).getBoundingClientRect() : null
+
+        if (!editor.isActive('paragraph') || !range || range.width === 0) {
+          this.showMenu = false
+          return
+        }
+
+        this.showMenu = true
+        this.menuStyle = {
+          display: 'block',
+          position: 'absolute',
+          top: `${range.top + window.scrollY - 40}px`,
+          left: `${range.left + window.scrollX}px`,
+        }
+      },
     })
   },
   beforeUnmount() {
@@ -94,18 +113,25 @@ export default {
   border: 1px solid #ddd;
   padding: 1rem;
   border-radius: 8px;
+  position: relative;
 }
 
-.toolbar {
+.floating-menu {
   display: flex;
   gap: 8px;
-  margin-bottom: 1rem;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 8px;
+  z-index: 10;
 }
 
 button {
-  padding: 0.5rem 1rem;
-  border: 1px solid #ddd;
-  background: #f9f9f9;
+  padding: 0.5rem;
+  border: none;
+  background: #f1f1f1;
+  border-radius: 4px;
   cursor: pointer;
 }
 
@@ -116,5 +142,6 @@ button.is-active {
 
 editor-content {
   min-height: 200px;
+  margin-top: 1rem;
 }
 </style>
