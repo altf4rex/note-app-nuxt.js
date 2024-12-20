@@ -33,7 +33,11 @@ authStore.$subscribe((mutation, state) => {
 onMounted(async () => {
   try {
     authStore.loadCurrentUser();
-    await pagesStore.fetchPages();
+    if (authStore.currentUser) {
+      await pagesStore.fetchPages(); // Авторизованный пользователь
+    } else {
+      await pagesStore.fetchShowCasePages(); // Гость
+    }
   } catch (error: any) {
     console.error("Failed to initialize data:", error.message);
   }

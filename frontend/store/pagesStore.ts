@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { fetchPages, fetchPageById, addPage, savePage, deletePage } from "../utils/apiService";
+import { fetchPages, fetchPageById, addPage, savePage, deletePage, fetchShowCasePageById, fetchShowCasePages } from "../utils/apiService";
 import { useAuthStore } from "./authStore";
 import type { ListType } from "@/types/index";
 
@@ -47,6 +47,44 @@ export const usePagesStore = defineStore("pages", {
       this.isLoading = true;
       try {
         const fetchedPage = await fetchPageById(id);
+        this.currentPage = fetchedPage || {
+          _id: "",
+          title: "",
+          content: "",
+          createdAt: new Date(),
+          updatedAt: null,
+        };
+        this.error = null;
+      } catch (error) {
+        this.handleError(error);
+      } finally {
+        this.isLoading = false;
+      }
+    },
+    // Для шоукейсинга - получение всех страниц
+    async fetchShowCasePages() {
+      this.isLoading = true;
+      try {
+        this.list = await fetchShowCasePages();
+        this.error = null;
+      } catch (error) {
+        this.handleError(error);
+      } finally {
+        this.isLoading = false;
+      }
+    },
+
+    // Для шоукейсинга - получение страницы по ID
+    async fetchShowCasePageById(id: string) {
+      const cachedPage = this.list.find((page) => page._id === id);
+      if (cachedPage) {
+        this.currentPage = cachedPage;
+        return;
+      }
+
+      this.isLoading = true;
+      try {
+        const fetchedPage = await fetchShowCasePageById(id);
         this.currentPage = fetchedPage || {
           _id: "",
           title: "",

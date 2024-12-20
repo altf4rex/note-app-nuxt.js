@@ -3,6 +3,34 @@ import type { ListType } from "@/types/index";
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000"; // Fallback для локальной разработки
 
 // Получение текущего пользователя
+
+export async function fetchShowCasePages() {
+  try{
+    const pages = await $fetch<ListType[]>(`${API_URL}/api/showcase/pages`, {
+      method: "GET",
+      credentials: "include",
+    })
+    return pages || [];
+  } catch (error: unknown) {
+    console.error("Error fetching pages:", error);
+    throw new Error("Error fetching pages");
+  }
+}
+
+export async function fetchShowCasePageById(id: string) {
+  try{
+    const pages = await $fetch<ListType>(`${API_URL}/api/showcase/pages/${id}`, {
+      method: "GET",
+      credentials: "include",
+    })
+    return pages || [];
+  } catch (error: unknown) {
+    console.error(`Error fetching page by ID (${id}):`, error);
+    throw new Error("Error fetching page by ID");
+  }
+  
+}
+
 export async function fetchCurrentUser() {
   try {
     const data = await $fetch<{ user: any }>(`${API_URL}/api/auth/current-user`, {
@@ -69,6 +97,7 @@ export async function logoutUser() {
       method: "POST",
       credentials: "include",
     });
+    document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
   } catch (error: unknown) {
     console.error("Error during logout:", error);
     throw new Error("Failed to log out");
