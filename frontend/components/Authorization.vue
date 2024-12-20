@@ -61,8 +61,8 @@ async function logout() {
       <button @click="logout">Logout</button>
     </p>
     <div v-else class="log-buttons">
-      <button v-if="!authStore.isAuthenticated" @click="toggleModal('login')">Login</button>
-      <button v-if="!authStore.isAuthenticated" @click="toggleModal('register')">Register</button>
+      <button class="register-button" v-if="!authStore.isAuthenticated" @click="toggleModal('login')">Login</button>
+      <button class="register-button" v-if="!authStore.isAuthenticated" @click="toggleModal('register')">Register</button>
     </div>
     
     <!-- <p v-else>Не зарегистрировано</p>
@@ -77,8 +77,8 @@ async function logout() {
         <h2>{{ isLogin ? 'Login' : 'Register' }}</h2>
         <input v-model="username" placeholder="Username" required />
         <input v-model="password" type="password" placeholder="Password" required />
-        <button type="submit">{{ isLogin ? 'Login' : 'Register' }}</button>
-        <button type="button" @click="closeModal">Close</button>
+        <button class="register-button" type="submit">{{ isLogin ? 'Login' : 'Register' }}</button>
+        <button class="register-button" type="button" @click="closeModal">Close</button>
       </form>
     </div>
   </div>
@@ -121,18 +121,21 @@ input {
   border-radius: 5px;
 }
 
-button {
-  display: block;
-  margin: 10px auto 0;
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
+.register-button {
+  background-color: #2a2a2a;
+  color: #fff;
+  font-size: 14px;
+  padding: 10px;
   border: none;
-  border-radius: 5px;
+  border-radius: 4px;
   cursor: pointer;
+  text-align: center;
+  transition: background-color 0.2s, box-shadow 0.2s;
 }
 
-button:hover {
-  background-color: #0056b3;
+.register-button:hover {
+  background-color: #444;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
 }
+
 </style>

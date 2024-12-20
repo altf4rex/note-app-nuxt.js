@@ -23,6 +23,10 @@ body {
   color: #B2B2B1; 
 }
 
+input:active, :hover, :focus {
+    outline: 0;
+    outline-offset: 0;
+}
 /* #__nuxt{
   width: 100%;
   height: 100%; 

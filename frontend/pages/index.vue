@@ -45,16 +45,19 @@ const addPage = async () => {
 }
 
 .empty-message button {
-  margin-top: 10px;
-  padding: 10px 20px;
+  background-color: #2a2a2a;
   color: #fff;
-  background-color: #444;
+  font-size: 14px;
+  padding: 10px;
   border: none;
-  border-radius: 5px;
+  border-radius: 4px;
   cursor: pointer;
+  text-align: center;
+  transition: background-color 0.2s, box-shadow 0.2s;
 }
 
 .empty-message button:hover {
-  background-color: #555;
+  background-color: #444;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
 }
 </style>

@@ -87,17 +87,19 @@ export default {
         const selection = window.getSelection()
         const range = selection.rangeCount > 0 ? selection.getRangeAt(0).getBoundingClientRect() : null
 
-        if (!editor.isActive('paragraph') || !range || range.width === 0) {
+        // Меню появляется только после выделения
+        if (!range || range.width === 0) {
           this.showMenu = false
           return
         }
 
+        // Расположение меню
         this.showMenu = true
         this.menuStyle = {
           display: 'block',
           position: 'absolute',
-          top: `${range.top + window.scrollY - 40}px`,
-          left: `${range.left + window.scrollX}px`,
+          top: `${range.top + window.scrollY - 350}px`, // Немного выше выделенного текста
+          left: `${range.left + window.scrollX - 120}px`,
         }
       },
     })
@@ -110,29 +112,35 @@ export default {
 
 <style scoped>
 .editor-container {
-  border: 1px solid #ddd;
   padding: 1rem;
-  border-radius: 8px;
   position: relative;
 }
 
 .floating-menu {
   display: flex;
   gap: 8px;
-  background: white;
-  border: 1px solid #ddd;
-  border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 8px;
   z-index: 10;
+  background-color: #2a2a2a;  /* Общий стиль фона кнопок */
+  border-radius: 8px;  /* Стиль кнопок */
 }
 
 button {
-  padding: 0.5rem;
+  background-color: #2a2a2a;
+  color: #fff;
+  font-size: 14px;
+  padding: 10px;
   border: none;
-  background: #f1f1f1;
   border-radius: 4px;
   cursor: pointer;
+  text-align: center;
+  transition: background-color 0.2s, box-shadow 0.2s;
+}
+
+button:hover {
+  background-color: #444;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
 }
 
 button.is-active {

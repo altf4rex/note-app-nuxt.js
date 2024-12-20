@@ -3,10 +3,9 @@ import { usePagesStore } from '@/store/pagesStore';
 import { useUiStore } from '@/store/uiStore';
 import { useRouter } from "vue-router";
 
-const router = useRouter();
 const pagesStore = usePagesStore();
 const uiStore = useUiStore();
-
+const router = useRouter();
 
 const addPage = async () => {
   try {
@@ -27,32 +26,43 @@ const deletePage = async (id: string) => {
 </script>
 
 <template>
-<transition name="slide">
-      <div v-if="uiStore.isSidebarOpen" class="sideBar-container">
-        <h3 class="main-page__link">
-          <router-link :to="`/`">Welcome Page</router-link>
-        </h3>
-        <ul class="list" v-if="pagesStore.list.length > 0">
-          <li class="list-item" v-for="(page, index) in pagesStore.list" :key="page._id">
-            <router-link :to="`/${page._id}`">{{ page.title }}</router-link>
-            <button @click="deletePage(page._id)">delete</button>
-          </li>
-        </ul>
-        <div v-else>Hmmm... Pages...</div>
-        <button @click="addPage">Add Page</button>
-      </div>
-    </transition>
+  <transition name="slide">
+    <div v-if="uiStore.isSidebarOpen" class="sideBar-container">
+      <h3 class="main-page__link">
+        <router-link :to="`/`">Welcome Page</router-link>
+      </h3>
+      <ul class="list" v-if="pagesStore.list.length > 0">
+        <li class="list-item" v-for="(page, index) in pagesStore.list" :key="page._id">
+          <router-link :to="`/${page._id}`" class="list-item-link">
+            <i class="icon-placeholder"></i> <!-- Иконка перед названием -->
+            {{ page.title }}
+          </router-link>
+          <button class="delete-button" @click="deletePage(page._id)">✕</button>
+        </li>
+      </ul>
+      <div v-else class="empty-pages">Hmmm... Pages...</div>
+      <button class="add-page-button" @click="addPage">+ Add Page</button>
+    </div>
+  </transition>
 </template>
-
 
 <style scoped>
 .sideBar-container {
-  min-width: 250px;
-  max-width: 15%;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 200px; /* Сохранена ширина */
   height: 100vh;
-  background: #262323;
-  transition: transform 0.3s ease;
+    background-color: #191919; /* Темный фон */
+  color: #b2b2b1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  border-right: 1px solid #333;
   overflow: hidden;
+  z-index: 100;
+  transition: transform 0.3s ease;
 }
 
 .slide-enter-active,
@@ -65,53 +75,81 @@ const deletePage = async (id: string) => {
   transform: translateX(-100%);
 }
 
-.main-page__link a{
+.main-page__link a {
   text-decoration: none;
   color: #b2b2b1;
-}
-
-.main-page__link a{
-  text-decoration: none;
-  color: #b2b2b1;
+  font-size: 14px;
 }
 
 .list {
   list-style: none;
   padding: 0;
   margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .list-item {
-  margin: 10px 0;
-  font-size: 18px;
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-content: center;
 }
 
-.list-item a {
+.list-item-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   text-decoration: none;
   color: #b2b2b1;
-  transition: color 0.3s ease;
+  font-size: 14px;
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: background-color 0.2s, color 0.2s;
 }
 
-.list-item a:hover {
-  color: #ffffff;
+.list-item-link:hover {
+  background-color: #2a2a2a;
+  color: #fff;
 }
 
-.list-item button {
+.icon-placeholder {
+  width: 16px;
+  height: 16px;
+  background-color: #444;
+  border-radius: 4px;
+}
+
+.delete-button {
   border: none;
-  outline: none;
   background: none;
-  box-shadow: none;
-  font-size: 12px;
-  color: blanchedalmond;
-  background-color: inherit;
-  border-radius: 12px;
+  color: #888;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 4px;
+  transition: color 0.2s, background-color 0.2s;
+  border-radius: 4px;
 }
 
-.list-item button:hover {
-  background-color: gray;
-  border: 0.5px solid blanchedalmond;
+.delete-button:hover {
+  color: #fff;
+  background-color: #444;
+}
+
+.add-page-button {
+  background-color: #2a2a2a;
+  color: #fff;
+  font-size: 14px;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.2s, box-shadow 0.2s;
+}
+
+.add-page-button:hover {
+  background-color: #444;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
 }
 </style>

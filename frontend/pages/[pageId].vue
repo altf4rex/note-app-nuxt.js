@@ -54,7 +54,7 @@ const savePage = async () => {
           :onUpdateContent="updateContent"
         />
       </client-only>
-      <button @click="savePage">Save</button>
+      <button class="save-page-button" @click="savePage">Save</button>
     </div>
   </div>
 </template>
@@ -73,7 +73,8 @@ const savePage = async () => {
 
 .title {
   width: 100%;
-  height: 100%;
+  margin-top: 40px;
+  margin-left: 10px;
   font-size: 36px;
   background-color: transparent;
   border: none;
@@ -89,5 +90,22 @@ const savePage = async () => {
 
 .content {
   flex: 3;
+}
+
+.save-page-button {
+  background-color: #2a2a2a;
+  color: #fff;
+  font-size: 14px;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.2s, box-shadow 0.2s;
+}
+
+.save-page-button:hover {
+  background-color: #444;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
 }
 </style>
