@@ -7,6 +7,7 @@ export const useAuthStore = defineStore('auth', {
     isAuthenticated: false,
     currentUser: null,
   }),
+  
   actions: {
     async logout() {
       const pagesStore = usePagesStore();
@@ -19,7 +20,8 @@ export const useAuthStore = defineStore('auth', {
         // Очищаем локальное состояние
         this.isAuthenticated = false;
         this.currentUser = null;
-        pagesStore.clearPages(); // Очищаем связанные данные
+        pagesStore.clearPages();
+        this.$reset();
       }
     },
 
