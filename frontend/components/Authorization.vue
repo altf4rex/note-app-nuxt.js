@@ -50,7 +50,6 @@ async function register() {
 // Выход
 async function logout() {
   await authStore.logout();
-  location.reload();
 }
 
 </script>
