@@ -97,10 +97,8 @@ export async function logoutUser() {
       method: "POST",
       credentials: "include",
     });
-    document.cookie = "token=; path=/; domain=your-domain.com; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+    document.cookie = "token=; domain=note-app-nuxt-js.vercel.app; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
 
-    // Перезагружаем страницу
-    location.reload(); // Полностью сбрасываем состояние приложения
   } catch (error: unknown) {
     console.error("Error during logout:", error);
     throw new Error("Failed to log out");
