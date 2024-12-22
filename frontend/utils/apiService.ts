@@ -100,7 +100,7 @@ export async function logoutUser() {
     document.cookie = "token=; path=/; domain=your-domain.com; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
 
     // Перезагружаем страницу
-    // location.reload(); // Полностью сбрасываем состояние приложения
+    location.reload(); // Полностью сбрасываем состояние приложения
   } catch (error: unknown) {
     console.error("Error during logout:", error);
     throw new Error("Failed to log out");
