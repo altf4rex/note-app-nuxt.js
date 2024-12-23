@@ -117,3 +117,47 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.editor-container {
+  padding: 1rem;
+  position: relative;
+}
+
+.floating-menu {
+  display: flex;
+  gap: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 8px;
+  z-index: 10;
+  background-color: #2a2a2a;  /* Общий стиль фона кнопок */
+  border-radius: 8px;  /* Стиль кнопок */
+}
+
+button {
+  background-color: #2a2a2a;
+  color: #fff;
+  font-size: 14px;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.2s, box-shadow 0.2s;
+}
+
+button:hover {
+  background-color: #444;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+button.is-active {
+  background: #007bff;
+  color: white;
+}
+
+editor-content {
+  min-height: 200px;
+  margin-top: 1rem;
+}
+</style>

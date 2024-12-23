@@ -5,13 +5,7 @@ import type { ListType } from "@/types/index";
 
 export const usePagesStore = defineStore("pages", {
   state: () => ({
-    list: [{
-      _id: "1",
-      title: "title",
-      content: "text",
-      createdAt: new Date(),
-      updatedAt: null,
-    }] as ListType[],
+    list: [] as ListType[],
     currentPage: {} as ListType,
     error: null as string | null,
     isLoading: false,
