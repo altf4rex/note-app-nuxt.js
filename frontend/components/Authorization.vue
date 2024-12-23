@@ -59,16 +59,12 @@ async function logout() {
     <!-- Проверяем, авторизован ли пользователь -->
     <p v-if="authStore.currentUser">
       {{ authStore.currentUser.username }}
-      <button @click="logout">Logout</button>
+      <button @click="logout" class="register-button">Logout</button>
     </p>
     <div v-else class="log-buttons">
       <button class="register-button" v-if="!authStore.isAuthenticated" @click="toggleModal('login')">Login</button>
       <button class="register-button" v-if="!authStore.isAuthenticated" @click="toggleModal('register')">Register</button>
     </div>
-    
-    <!-- <p v-else>Не зарегистрировано</p>
-    <button v-if="!authStore.isAuthenticated" @click="toggleModal('login')">Login</button>
-    <button v-if="!authStore.isAuthenticated" @click="toggleModal('register')">Register</button> -->
   </div>
 
   <!-- Модальное окно -->
@@ -105,30 +101,32 @@ async function logout() {
 }
 
 .modal-content {
-  background: white;
+  background: #191919;
   padding: 20px;
   border-radius: 10px;
   width: 90%;
   max-width: 400px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 5px 15px rgba(36, 36, 36, 0.3);
 }
 
 input {
   display: block;
   width: 100%;
   margin: 10px 0;
-  padding: 10px;
+  padding: 10px 0;
   border: 1px solid #ccc;
   border-radius: 5px;
 }
 
 .register-button {
+  margin-top: 10px;
+  margin-right: 12px;
   background-color: #2a2a2a;
   color: #fff;
   font-size: 14px;
   padding: 10px;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: pointer;
   text-align: center;
   transition: background-color 0.2s, box-shadow 0.2s;

@@ -5,7 +5,67 @@ import type { ListType } from "@/types/index";
 
 export const usePagesStore = defineStore("pages", {
   state: () => ({
-    list: [] as ListType[],
+    list: [{
+      _id: "1",
+      title: "page 1",
+      content: "text",
+      createdAt: new Date(),
+      updatedAt: null,
+    },{
+      _id: "2",
+      title: "page 2",
+      content: "text",
+      createdAt: new Date(),
+      updatedAt: null,
+    },{
+      _id: "3",
+      title: "page 3",
+      content: "text",
+      createdAt: new Date(),
+      updatedAt: null,
+    },{
+      _id: "4",
+      title: "page 4",
+      content: "text",
+      createdAt: new Date(),
+      updatedAt: null,
+    },{
+      _id: "5",
+      title: "page 5",
+      content: "texttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttext",
+      createdAt: new Date(),
+      updatedAt: null,
+    },{
+      _id: "1",
+      title: "page 1",
+      content: "text",
+      createdAt: new Date(),
+      updatedAt: null,
+    },{
+      _id: "2",
+      title: "page 2",
+      content: "text",
+      createdAt: new Date(),
+      updatedAt: null,
+    },{
+      _id: "3",
+      title: "page 3",
+      content: "text",
+      createdAt: new Date(),
+      updatedAt: null,
+    },{
+      _id: "4",
+      title: "page 4",
+      content: "text",
+      createdAt: new Date(),
+      updatedAt: null,
+    },{
+      _id: "5",
+      title: "page 5",
+      content: "texttexttexttexttexttexttexttexttexttexttexttexttexttext",
+      createdAt: new Date(),
+      updatedAt: null,
+    },] as ListType[],
     currentPage: {} as ListType,
     error: null as string | null,
     isLoading: false,

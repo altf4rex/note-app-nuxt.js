@@ -45,6 +45,7 @@ const uiStore = useUiStore();
 header {
   display: flex;
   justify-content: space-between;
+  padding: 10px 4px;
 }
 
 .sideBar-burger {
