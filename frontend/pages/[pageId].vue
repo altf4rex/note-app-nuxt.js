@@ -22,7 +22,6 @@ onMounted(async () => {
   }
 });
 
-// Обработчик для обновления контента в store
 const updateContent = (newContent: string) => {
   pagesStore.currentPage.content = newContent;
 };
@@ -49,10 +48,7 @@ const savePage = async () => {
         placeholder="Title"
         class="title" />
       <client-only>
-        <TiptapEditor
-          :content="pagesStore.currentPage.content"
-          :onUpdateContent="updateContent"
-        />
+        <TiptapEditor />
       </client-only>
       <button class="save-page-button" @click="savePage">Save</button>
     </div>
@@ -65,10 +61,6 @@ const savePage = async () => {
   display: flex;
   flex-wrap: wrap;
   color: #b2b2b1;
-}
-
-.content {
-
 }
 
 .title {

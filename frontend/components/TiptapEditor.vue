@@ -50,11 +50,12 @@
 </template>
 
 <script>
-import { Editor, EditorContent } from '@tiptap/vue-3'
-import StarterKit from '@tiptap/starter-kit'
-import TextStyle from '@tiptap/extension-text-style'
-import Color from '@tiptap/extension-color'
-import ListItem from '@tiptap/extension-list-item'
+import { Editor, EditorContent } from "@tiptap/vue-3";
+import StarterKit from "@tiptap/starter-kit";
+import TextStyle from "@tiptap/extension-text-style";
+import Color from "@tiptap/extension-color";
+import ListItem from "@tiptap/extension-list-item";
+import { usePagesStore } from "../store/pagesStore";
 
 export default {
   components: {
@@ -65,91 +66,54 @@ export default {
       editor: null,
       showMenu: false,
       menuStyle: {
-        position: 'absolute',
-        top: '0',
-        left: '0',
-        display: 'none',
+        position: "absolute",
+        top: "0",
+        left: "0",
+        display: "none",
       },
-    }
+    };
   },
   mounted() {
+    const pagesStore = usePagesStore();
+
+    // Устанавливаем начальное содержимое из currentPage
+    const initialContent = pagesStore.currentPage?.content || "";
+
     this.editor = new Editor({
       extensions: [
         StarterKit,
         TextStyle,
         Color.configure({ types: [TextStyle.name, ListItem.name] }),
       ],
-      content: `
-        <h2>Welcome to Tiptap!</h2>
-        <p>Select some text to see the floating menu.</p>
-      `,
-      onSelectionUpdate: ({ editor }) => {
-        const selection = window.getSelection()
-        const range = selection.rangeCount > 0 ? selection.getRangeAt(0).getBoundingClientRect() : null
-
-        // Меню появляется только после выделения
-        if (!range || range.width === 0) {
-          this.showMenu = false
-          return
-        }
-
-        // Расположение меню
-        this.showMenu = true
-        this.menuStyle = {
-          display: 'block',
-          position: 'absolute',
-          top: `${range.top + window.scrollY - 350}px`, // Немного выше выделенного текста
-          left: `${range.left + window.scrollX - 120}px`,
-        }
+      content: initialContent,
+      onUpdate: ({ editor }) => {
+        const updatedContent = editor.getHTML();
+        pagesStore.currentPage.content = updatedContent; // Обновляем store
       },
-    })
+      onSelectionUpdate: ({ editor }) => {
+        const selection = window.getSelection();
+        const range =
+          selection.rangeCount > 0
+            ? selection.getRangeAt(0).getBoundingClientRect()
+            : null;
+
+        if (!range || range.width === 0) {
+          this.showMenu = false;
+          return;
+        }
+
+        this.showMenu = true;
+        this.menuStyle = {
+          display: "block",
+          position: "absolute",
+          top: `${range.top + window.scrollY - 350}px`,
+          left: `${range.left + window.scrollX - 120}px`,
+        };
+      },
+    });
   },
   beforeUnmount() {
-    this.editor.destroy()
+    this.editor.destroy();
   },
-}
+};
 </script>
-
-<style scoped>
-.editor-container {
-  padding: 1rem;
-  position: relative;
-}
-
-.floating-menu {
-  display: flex;
-  gap: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 8px;
-  z-index: 10;
-  background-color: #2a2a2a;  /* Общий стиль фона кнопок */
-  border-radius: 8px;  /* Стиль кнопок */
-}
-
-button {
-  background-color: #2a2a2a;
-  color: #fff;
-  font-size: 14px;
-  padding: 10px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  text-align: center;
-  transition: background-color 0.2s, box-shadow 0.2s;
-}
-
-button:hover {
-  background-color: #444;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
-}
-
-button.is-active {
-  background: #007bff;
-  color: white;
-}
-
-editor-content {
-  min-height: 200px;
-  margin-top: 1rem;
-}
-</style>
