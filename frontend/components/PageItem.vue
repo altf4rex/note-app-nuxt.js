@@ -50,7 +50,7 @@ const truncateText = (text: string, length: number): string => {
   padding: 20px;
   display: flex;
   width: 240px;
-  height: 340px;
+  height: 285px;
   flex-direction: column;
   align-items: center;
   background: #2b2b2b;
@@ -92,13 +92,14 @@ const truncateText = (text: string, length: number): string => {
     to bottom,
     #2b2b2b 0,
     #2b2b2b 22px,
-    #3c3c3c 23px
+    #888888 23px
   ); /* Линии, имитирующие страницы */
   padding: 10px;
   border-radius: 6px;
 }
 
 .page-sticker__content p {
+  margin-top: -4px;
   overflow: hidden;
   text-overflow: ellipsis;
   word-wrap: break-word;
