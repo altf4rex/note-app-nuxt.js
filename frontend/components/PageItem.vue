@@ -9,9 +9,10 @@ function navigateToPage(id: string) {
   router.push(`/${id}`);
 }
 
-// Функция для обрезки текста
 const truncateText = (text: string, length: number): string => {
-  return text.length > length ? text.slice(0, length) + "..." : text;
+  const parser = new DOMParser();
+  const parsedText = parser.parseFromString(text, "text/html").body.innerText;
+  return parsedText.length > length ? parsedText.slice(0, length) + "..." : parsedText;
 };
 </script>
 
@@ -24,12 +25,15 @@ const truncateText = (text: string, length: number): string => {
       @click="navigateToPage(item._id)"
     >
       <h3>{{ item.title }}</h3>
-      <div class="page-sticker__content">
-        <p>{{ truncateText(item.content, 300) }}</p>
-      </div>
+      <client-only fallback="<p>Loading...</p>">
+        <div class="page-sticker__content">
+          <p>{{ truncateText(item.content, 300) }}</p>
+        </div>
+      </client-only>
     </div>
   </div>
 </template>
+
 
 <style scoped>
 /* Контейнер для карточек */
