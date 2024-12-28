@@ -52,7 +52,7 @@
       #2b2b2b 75%
     );
     background-size: 200% 100%;
-    animation: shimmer 1.5s infinite;
+    animation: shimmer 4s infinite;
   }
   
   /* Анимация переливания */
