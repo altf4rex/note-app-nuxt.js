@@ -9,7 +9,7 @@ const router = useRouter();
 
 const addPage = async () => {
   try {
-    const newPageId = await pagesStore.addPage("New Page", "Text");
+    await pagesStore.addPage("New Page", "Text");
     router.push(`/${pagesStore.currentPage._id}`);
   } catch (error: any) {
     console.error("Failed to add page:", error.message);
@@ -31,12 +31,14 @@ const deletePage = async (id: string) => {
       <h3 class="main-page__link">
         <router-link :to="`/`">Welcome Page</router-link>
       </h3>
-      <ul class="list" v-if="pagesStore.list.length > 0">
+      <!-- Отображение контента при загрузке, пустом списке или наличии страниц -->
+      <div v-if="pagesStore.isLoading" class="loading-placeholder">Loading...</div>
+      <ul class="list" v-else-if="pagesStore.list.length > 0">
         <li class="list-item" v-for="(page, index) in pagesStore.list" :key="page._id">
           <router-link :to="`/${page._id}`" class="list-item-link">
             <svg x="0px" y="0px" width="20" height="20" viewBox="0 0 50 50" class="pgae-icon">
-              <path d="M 11.5 2 C 9.5788117 2 8 3.5788117 8 5.5 L 8 44.5 C 8 46.421188 9.5788117 48 11.5 48 L 38.5 48 C 40.421188 48 42 46.421188 42 44.5 L 42 14.585938 L 29.414062 2 L 11.5 2 z M 11.5 4 L 28 4 L 28 12.5 C 28 14.421188 29.578812 16 31.5 16 L 40 16 L 40 44.5 C 40 45.340812 39.340812 46 38.5 46 L 11.5 46 C 10.659188 46 10 45.340812 10 44.5 L 10 5.5 C 10 4.6591883 10.659188 4 11.5 4 z M 30 5.4140625 L 38.585938 14 L 31.5 14 C 30.659188 14 30 13.340812 30 12.5 L 30 5.4140625 z M 18.5 24.5 A 1.5 1.5 0 0 0 17 26 A 1.5 1.5 0 0 0 18.5 27.5 A 1.5 1.5 0 0 0 20 26 A 1.5 1.5 0 0 0 18.5 24.5 z M 22 25 L 22 27 L 33 27 L 33 25 L 22 25 z M 18.5 29.5 A 1.5 1.5 0 0 0 17 31 A 1.5 1.5 0 0 0 18.5 32.5 A 1.5 1.5 0 0 0 20 31 A 1.5 1.5 0 0 0 18.5 29.5 z M 22 30 L 22 32 L 33 32 L 33 30 L 22 30 z M 18.5 34.5 A 1.5 1.5 0 0 0 17 36 A 1.5 1.5 0 0 0 18.5 37.5 A 1.5 1.5 0 0 0 20 36 A 1.5 1.5 0 0 0 18.5 34.5 z M 22 35 L 22 37 L 33 37 L 33 35 L 22 35 z"></path>
-          </svg>
+              <path d="..."></path>
+            </svg>
             {{ page.title }}
           </router-link>
           <button class="delete-button" @click="deletePage(page._id)">✕</button>
@@ -55,7 +57,7 @@ const deletePage = async (id: string) => {
   top: 0;
   width: 200px; /* Сохранена ширина */
   height: 100vh;
-    background-color: #191919; /* Темный фон */
+  background-color: #191919; /* Темный фон */
   color: #b2b2b1;
   padding: 20px;
   display: flex;
@@ -124,8 +126,6 @@ const deletePage = async (id: string) => {
   color: #fff;
 }
 
-
-
 .delete-button {
   border: none;
   background: none;
@@ -157,5 +157,30 @@ const deletePage = async (id: string) => {
 .add-page-button:hover {
   background-color: #444;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+}
+.loading-placeholder {
+  text-align: center;
+  font-size: 18px;
+  color: #ccc;
+  margin-top: 20px;
+}
+
+.empty-pages {
+  text-align: center;
+  font-size: 16px;
+  color: #bbb;
+  margin-top: 20px;
+}
+
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 </style>

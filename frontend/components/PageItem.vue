@@ -25,7 +25,7 @@ const truncateText = (text: string, length: number): string => {
       @click="navigateToPage(item._id)"
     >
       <h3>{{ item.title }}</h3>
-      <client-only fallback="<p>Loading...</p>">
+      <client-only fallback="Loading...">
         <div class="page-sticker__content">
           <p>{{ truncateText(item.content, 300) }}</p>
         </div>

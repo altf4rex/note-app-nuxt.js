@@ -2,6 +2,7 @@
 import { usePagesStore } from "@/store/pagesStore";
 import { useRouter } from "vue-router";
 import PageItem from "~/components/PageItem.vue";
+import SkeletonCards from "~/components/SkeletonCard.vue";
 
 const router = useRouter();
 const pagesStore = usePagesStore();
@@ -22,10 +23,24 @@ const addPage = async () => {
 
 <template>
   <div class="mainPage-container">
-    <PageItem v-if="pagesStore.list.length > 0"/>
-    <div class="empty-message" v-else>
-      <p>No pages found. Why not create one?</p>
-      <button @click="addPage">Add Page</button>
+    <!-- Отображаем скелетоны, если идет загрузка -->
+    <SkeletonCards v-if="pagesStore.isLoading" v-for="i in 8" :key="i" />
+    <!-- Отображаем карточки, если данные загружены -->
+    <div v-else>
+      <div v-if="pagesStore.list.length > 0">
+        <PageItem
+          v-for="item in pagesStore.list"
+          :key="item._id"
+          :item="item"
+          @click="navigateToPage(item._id)"
+        />
+      </div>
+
+      <!-- Сообщение, если страниц нет -->
+      <div class="empty-message" v-else>
+        <p>No pages found. Why not create one?</p>
+        <button @click="addPage">Add Page</button>
+      </div>
     </div>
   </div>
 </template>
