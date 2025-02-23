@@ -28,12 +28,7 @@ const addPage = async () => {
     <!-- Отображаем карточки, если данные загружены -->
     <div v-else>
       <div v-if="pagesStore.list.length > 0">
-        <PageItem
-          v-for="item in pagesStore.list"
-          :key="item._id"
-          :item="item"
-          @click="navigateToPage(item._id)"
-        />
+        <PageItem />
       </div>
 
       <!-- Сообщение, если страниц нет -->

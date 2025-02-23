@@ -55,9 +55,9 @@ const deletePage = async (id: string) => {
   position: fixed;
   left: 0;
   top: 0;
-  width: 200px; /* Сохранена ширина */
+  width: 200px;
   height: 100vh;
-  background-color: #191919; /* Темный фон */
+  background-color: #191919;
   color: #b2b2b1;
   padding: 20px;
   display: flex;

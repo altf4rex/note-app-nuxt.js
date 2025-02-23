@@ -11,7 +11,6 @@
   </template>
   
   <style scoped>
-  /* Контейнер для карточек */
   .container {
     display: flex;
     flex-wrap: wrap;
@@ -20,7 +19,6 @@
     padding: 20px;
   }
   
-  /* Стили карточек */
   .page-sticker {
     padding: 20px;
     display: flex;
@@ -43,7 +41,6 @@
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
   }
   
-  /* Скелетон карточки с анимацией */
   .skeleton {
     background: linear-gradient(
       90deg,
@@ -52,20 +49,18 @@
       #2b2b2b 75%
     );
     background-size: 200% 100%;
-    animation: shimmer 4s infinite;
+    animation: linear 10s infinite;
   }
   
-  /* Анимация переливания */
-  @keyframes shimmer {
+  @keyframes linear {
     0% {
-      background-position: -200% 0;
+      background-position: -180% 0;
     }
     100% {
       background-position: 200% 0;
     }
   }
   
-  /* Стили заголовка */
   .page-sticker h3 {
     margin: 0 0 10px;
     color: #ffffff;
@@ -73,7 +68,6 @@
     text-align: center;
   }
   
-  /* Стили контента карточки */
   .page-sticker__content {
     margin: 0;
     font-size: 14px;
@@ -95,7 +89,7 @@
     text-overflow: ellipsis;
     word-wrap: break-word;
     display: -webkit-box;
-    -webkit-line-clamp: 12; /* Максимум 12 строк текста */
+    -webkit-line-clamp: 12;
     -webkit-box-orient: vertical;
   }
   </style>

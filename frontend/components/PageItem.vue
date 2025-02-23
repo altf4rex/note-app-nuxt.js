@@ -36,7 +36,6 @@ const truncateText = (text: string, length: number): string => {
 
 
 <style scoped>
-/* Контейнер для карточек */
 .container {
   display: flex;
   flex-wrap: wrap;
@@ -45,7 +44,6 @@ const truncateText = (text: string, length: number): string => {
   padding: 20px;
 }
 
-/* Стили карточек */
 .page-sticker {
   padding: 20px;
   display: flex;
@@ -68,7 +66,6 @@ const truncateText = (text: string, length: number): string => {
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
 }
 
-/* Стили заголовка */
 .page-sticker h3 {
   margin: 0 0 10px;
   color: #ffffff;
@@ -76,7 +73,6 @@ const truncateText = (text: string, length: number): string => {
   text-align: center;
 }
 
-/* Стили контента карточки */
 .page-sticker__content {
   margin: 0;
   font-size: 14px;
@@ -93,7 +89,7 @@ const truncateText = (text: string, length: number): string => {
     #2b2b2b 0,
     #2b2b2b 22px,
     #888888 23px
-  ); /* Линии, имитирующие страницы */
+  ); 
   padding: 10px;
   border-radius: 6px;
 }
@@ -104,7 +100,7 @@ const truncateText = (text: string, length: number): string => {
   text-overflow: ellipsis;
   word-wrap: break-word;
   display: -webkit-box;
-  -webkit-line-clamp: 12; /* Максимум 12 строк текста */
+  -webkit-line-clamp: 12;
   -webkit-box-orient: vertical;
 }
 </style>

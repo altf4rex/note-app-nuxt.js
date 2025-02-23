@@ -130,8 +130,8 @@ export default {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 8px;
   z-index: 10;
-  background-color: #2a2a2a;  /* Общий стиль фона кнопок */
-  border-radius: 8px;  /* Стиль кнопок */
+  background-color: #2a2a2a;
+  border-radius: 8px;
 }
 
 button {
