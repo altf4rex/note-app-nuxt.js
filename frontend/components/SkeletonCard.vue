@@ -4,7 +4,7 @@
       <div class="page-sticker skeleton">
         <h3>Loading...</h3>
         <div class="page-sticker__content">
-          <p>Where are the pages??? Why so long???</p>
+          <p>I need my pages too</p>
         </div>
       </div>
     </div>
